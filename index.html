@@ -1,107 +1,1239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noor AI</title>
-  <style>
-    :root { --primary: #202123; --sidebar: #202123; --chat-bg: #343541; --text: #ececf1; }
-    body { font-family: 'Inter', sans-serif; background: var(--chat-bg); color: var(--text); margin: 0; display: flex; height: 100vh; }
-    #main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
-    header { padding: 15px; background: rgba(52, 53, 65, 0.9); border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; font-weight: 600; }
-    #chat-box { flex: 1; overflow-y: auto; padding: 5% 15%; display: flex; flex-direction: column; gap: 20px; }
-    .msg { padding: 20px; line-height: 1.6; max-width: 100%; border-radius: 5px; }
-    .no_user { background: #444654; } /* Bot message background */
-    .user { background: transparent; } /* User message background */
-    #status { font-size: 12px; color: #8e8ea0; text-align: center; padding: 10px; }
-    #input-container { padding: 20px 15%; background: linear-gradient(transparent, var(--chat-bg)); }
-    .input-wrapper { position: relative; display: flex; align-items: center; background: #40414f; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-    input { flex: 1; background: transparent; border: none; color: white; padding: 15px; outline: none; font-size: 16px; }
-    button { background: transparent; border: none; color: #acacbe; padding: 10px 15px; cursor: pointer; transition: 0.3s; }
-    button:disabled { opacity: 0.3; }
-    button:hover:not(:disabled) { color: white; }
-    pre { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; } /* For code blocks */
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrutam Water Supplies • Professional Dashboard</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { green: '#6da544', blue: '#328aef', dark: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --brand-green: #6da544;
+            --brand-blue: #328aef;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f5f7fa;
+            color: #374151;
+            transition: all 0.3s;
+        }
+
+        .dark body {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        /* Layout */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background: #1e293b;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .dark .sidebar {
+            background: #0f172a;
+            border-right: 1px solid #1e293b;
+        }
+
+        .sidebar-logo {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--brand-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .sidebar-logo .logo-text {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo .logo-text small {
+            font-size: 10px;
+            font-weight: 400;
+            opacity: 0.7;
+            display: block;
+        }
+
+        .nav-section {
+            padding: 16px 20px 6px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.5;
+            font-weight: 700;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13.5px;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            color: #cbd5e1;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(109, 165, 68, 0.15);
+            color: var(--brand-green);
+            border-left-color: var(--brand-green);
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            bottom: 0;
+            background: #1e293b;
+        }
+
+        .dark .sidebar-footer {
+            background: #0f172a;
+        }
+
+        /* Main */
+        .main-content {
+            margin-left: 240px;
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .top-header {
+            background: #fff;
+            padding: 14px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .dark .top-header {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .top-header h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .dark .top-header h1 {
+            color: #f1f5f9;
+        }
+
+        .content-area {
+            padding: 24px;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            margin-bottom: 20px;
+        }
+
+        .dark .card {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark .card-header {
+            border-bottom-color: #334155;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dark .stat-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.green {
+            background: #ecfdf5;
+            color: #10b981;
+        }
+        .stat-icon.blue {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+        .stat-icon.red {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+        .stat-icon.purple {
+            background: #faf5ff;
+            color: #8b5cf6;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f9fafb;
+            padding: 11px 14px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            border-bottom: 2px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        .dark thead th {
+            background: #0f172a;
+            color: #94a3b8;
+            border-bottom-color: #334155;
+        }
+
+        tbody td {
+            padding: 11px 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .dark tbody td {
+            border-bottom-color: #1e293b;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .dark tbody tr:hover {
+            background: #0f172a;
+        }
+
+        /* Form */
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 9px 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #fff;
+            color: #374151;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .dark .form-input,
+        .dark .form-select {
+            background: #0f172a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: var(--brand-green);
+            box-shadow: 0 0 0 3px rgba(109, 165, 68, 0.1);
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            margin-bottom: 4px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dark .form-label {
+            color: #94a3b8;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--brand-green);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #5a8a38;
+            box-shadow: 0 4px 12px rgba(109, 165, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        .dark .btn-secondary {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .btn-sm {
+            padding: 6px 11px;
+            font-size: 11px;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-warning {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background: #ecfdf5;
+            color: #059669;
+        }
+        .badge-warning {
+            background: #fffbeb;
+            color: #d97706;
+        }
+        .badge-info {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .dark .badge-success {
+            background: #064e3b;
+            color: #34d399;
+        }
+        .dark .badge-warning {
+            background: #78350f;
+            color: #fbbf24;
+        }
+        .dark .badge-info {
+            background: #1e3a5f;
+            color: #60a5fa;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark .modal {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Tab panels */
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Invoice Styles */
+        .invoice-container {
+            background: #fff;
+            color: #1e293b;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invoice-header {
+            text-align: center;
+            border-bottom: 3px solid #6da544;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .invoice-table th {
+            background: #6da544;
+            color: #fff;
+            padding: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .invoice-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+        }
+
+        .invoice-table .total-row {
+            background: #f0fdf4;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                min-width: 60px;
+            }
+            .sidebar .logo-text,
+            .sidebar .nav-item span,
+            .sidebar .nav-section,
+            .sidebar-footer span,
+            .sidebar-footer small {
+                display: none;
+            }
+            .sidebar .nav-item {
+                justify-content: center;
+                padding: 12px;
+            }
+            .sidebar .nav-item i {
+                font-size: 17px;
+            }
+            .main-content {
+                margin-left: 60px;
+            }
+            .content-area {
+                padding: 12px;
+            }
+            .top-header h1 {
+                font-size: 15px;
+            }
+        }
+
+        @media print {
+            .sidebar,
+            .top-header,
+            .no-print {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .content-area {
+                padding: 0 !important;
+            }
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+    </style>
 </head>
 <body>
 
-  <div id="main-content">
-    <header>Noor AI</header>
-    <div id="status">Initializing Engine...</div>
-    <div id="chat-box">
-      <div class="msg no_user">Hello. I am Noor, an AI coding assistant. How can I help you today?</div>
+    <div class="app-layout">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">💧</div>
+                <div class="logo-text">Amrutam Water<small>Pure Trust Since 2020</small></div>
+            </div>
+            <nav>
+                <div class="nav-section">Main</div>
+                <div class="nav-item active" data-tab="dashboard"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
+                <div class="nav-item" data-tab="trips"><i class="fas fa-route"></i> <span>Trip Logger</span></div>
+                <div class="nav-item" data-tab="bulkorder"><i class="fas fa-boxes"></i> <span>Bulk Orders</span></div>
+                <div class="nav-section">Customers</div>
+                <div class="nav-item" data-tab="customers"><i class="fas fa-users"></i> <span>All Customers</span></div>
+                <div class="nav-item" data-tab="ledger"><i class="fas fa-book"></i> <span>Monthly Ledger</span></div>
+                <div class="nav-section">Finance</div>
+                <div class="nav-item" data-tab="expenses"><i class="fas fa-receipt"></i> <span>Expenses</span></div>
+                <div class="nav-item" data-tab="invoices"><i class="fas fa-file-invoice"></i> <span>Invoices</span></div>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="saveToJSON()" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;margin-bottom:6px;"><i class="fas fa-save"></i> <span>Save to JSON</span></button>
+                <button onclick="exportBackup()" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;"><i class="fas fa-download"></i> <span>Download Backup</span></button>
+                <small style="color:#64748b;display:block;text-align:center;margin-top:8px;font-size:10px;">Auto-loads Amrutam_Data.json</small>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN ========== -->
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h1 id="headerTitle">Dashboard</h1>
+                    <p style="font-size:11px;color:#6b7280;" id="currentDate"></p>
+                </div>
+                <div>
+                    <button onclick="toggleDarkMode()" class="btn btn-secondary btn-sm"><i class="fas fa-moon" id="darkIcon"></i></button>
+                </div>
+            </header>
+            <div class="content-area">
+
+                <!-- DASHBOARD -->
+                <div class="tab-panel active" id="tab-dashboard">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px;">
+                        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-wallet"></i></div><div><p style="font-size:10px;color:#6b7280;text-transform:uppercase;font-weight:700;">Today Cash</p><p style="font-size:22px;font-weight:700;color:#10b981;" id="dashCash">₹0</p></div></div>
+                        <div class="stat-card"><div class="stat-icon red"><i class="fas fa-chart-down"></i></div><div><p style="font-size:10px;color:#6b7280;text-transform:uppercase;font-weight:700;">Expenses</p><p style="font-size:22px;font-weight:700;color:#ef4444;" id="dashExp">₹0</p></div></div>
+                        <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-chart-line"></i></div><div><p style="font-size:10px;color:#6b7280;text-transform:uppercase;font-weight:700;">Profit</p><p style="font-size:22px;font-weight:700;color:#3b82f6;" id="dashProfit">₹0</p></div></div>
+                        <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-truck"></i></div><div><p style="font-size:10px;color:#6b7280;text-transform:uppercase;font-weight:700;">Trips Today</p><p style="font-size:22px;font-weight:700;color:#8b5cf6;" id="dashTrips">0</p></div></div>
+                    </div>
+                    <div class="card"><div class="card-header">📋 Recent Trips</div><div class="card-body" style="overflow-x:auto;"><table id="dashRecentTable"><thead><tr><th>Date</th><th>Route</th><th>Trip</th><th>Staff</th><th>Net</th><th>Cash</th><th>Tokens Sold</th></tr></thead><tbody></tbody></table></div></div>
+                </div>
+
+                <!-- TRIP LOGGER -->
+                <div class="tab-panel" id="tab-trips">
+                    <div class="card">
+                        <div class="card-header">🚛 New Trip Entry <span class="badge badge-success">Including Token Sales</span></div>
+                        <div class="card-body">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Date</label><input type="date" id="tDate" class="form-input"></div>
+                                <div><label class="form-label">Route</label><select id="tRoute" class="form-select"><option value="">Select</option><option>Route 1</option><option>Route 2</option><option>Route 3</option><option>Route 4</option><option>Route 5</option><option>Route 6</option><option>Route 7</option><option>Route 8</option><option>Route 9</option></select></div>
+                                <div><label class="form-label">Trip No</label><select id="tTripNo" class="form-select"><option value="">Select</option><option>T1</option><option>T2</option><option>T3</option><option>T4</option><option>T5</option><option>T6</option><option>T7</option><option>T8</option><option>T9</option></select></div>
+                                <div><label class="form-label">Staff</label><input type="text" id="tStaff" class="form-input" placeholder="Ramu, Shyam"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Loaded</label><input type="number" id="tLoaded" class="form-input" placeholder="50" min="0"></div>
+                                <div><label class="form-label">Returned</label><input type="number" id="tReturned" class="form-input" placeholder="5" min="0"></div>
+                                <div><label class="form-label">Token Recv</label><input type="number" id="tToken" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Card Bottles</label><input type="number" id="tCard" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Jar Sold</label><input type="number" id="tJar" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Cash Bottles</label><input type="number" id="tCashBottles" class="form-input" placeholder="0" min="0"></div>
+                            </div>
+                            <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:14px;">
+                                <p style="font-weight:700;font-size:13px;margin-bottom:8px;">🎟️ Token Packets Sold by Staff (this trip)</p>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;">
+                                    <div><label class="form-label">Customer</label><input type="text" id="tTokenCust" class="form-input" placeholder="Who bought?"></div>
+                                    <div><label class="form-label">Packet</label><select id="tTokenPacket" class="form-select"><option value="10">10 Tokens (₹300)</option><option value="20">20 Tokens (₹400)</option><option value="30">30 Tokens (₹500)</option><option value="50">50 Tokens (₹700)</option></select></div>
+                                    <div><label class="form-label">Qty</label><input type="number" id="tTokenQty" class="form-input" value="1" min="1"></div>
+                                    <div><label class="form-label">Amount (₹)</label><input type="number" id="tTokenAmt" class="form-input" placeholder="Collected"></div>
+                                </div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Diesel (₹)</label><input type="number" id="tDiesel" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Upaad (₹)</label><input type="number" id="tUpaad" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Pending Bottles</label><input type="number" id="tPendingB" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Pending Cash (₹)</label><input type="number" id="tPendingC" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Remarks</label><input type="text" id="tRemarks" class="form-input" placeholder="Note"></div>
+                            </div>
+                            <button onclick="saveTrip()" class="btn btn-primary" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> Save Trip & Clear</button>
+                        </div>
+                    </div>
+                    <div class="card"><div class="card-header">📜 All Trip Records</div><div class="card-body" style="overflow-x:auto;"><table id="masterLogsTable"><thead><tr><th>Date</th><th>Route</th><th>Trip</th><th>Staff</th><th>Net</th><th>Token Recv</th><th>Tokens Sold</th><th>Cash</th><th>Pending</th><th>Diesel</th><th>Upaad</th></tr></thead><tbody></tbody></table></div></div>
+                </div>
+
+                <!-- BULK ORDERS -->
+                <div class="tab-panel" id="tab-bulkorder">
+                    <div class="card">
+                        <div class="card-header">📦 New Bulk Order <span class="badge badge-info">Bottles + Jars + Discount</span></div>
+                        <div class="card-body">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Date</label><input type="date" id="bDate" class="form-input"></div>
+                                <div><label class="form-label">Customer</label><input type="text" id="bCustomer" class="form-input" placeholder="Name"></div>
+                                <div><label class="form-label">Water Bottles (Qty)</label><input type="number" id="bBottles" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Rate/Bottle (₹)</label><input type="number" id="bBottleRate" class="form-input" value="15" min="0"></div>
+                                <div><label class="form-label">Cold Jars (Qty)</label><input type="number" id="bJars" class="form-input" placeholder="0" min="0"></div>
+                                <div><label class="form-label">Rate/Jar (₹)</label><input type="number" id="bJarRate" class="form-input" value="35" min="0"></div>
+                                <div><label class="form-label">Delivery Charge (₹)</label><input type="number" id="bDelivery" class="form-input" value="0" min="0"></div>
+                                <div><label class="form-label">Discount (₹)</label><input type="number" id="bDiscount" class="form-input" value="0" min="0"></div>
+                            </div>
+                            <div style="background:#f0fdf4;border-radius:8px;padding:12px;margin-bottom:14px;text-align:center;">
+                                <span style="font-weight:700;">Total: </span><span id="bTotal" style="font-size:20px;font-weight:700;color:#10b981;">₹0</span>
+                            </div>
+                            <button onclick="saveBulkOrder()" class="btn btn-primary" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> Save Bulk Order</button>
+                        </div>
+                    </div>
+                    <div class="card"><div class="card-header">📋 Bulk Order History</div><div class="card-body" style="overflow-x:auto;"><table id="bulkOrderTable"><thead><tr><th>Date</th><th>Customer</th><th>Bottles</th><th>Jars</th><th>Delivery</th><th>Discount</th><th>Total</th><th>Invoice</th></tr></thead><tbody></tbody></table></div></div>
+                </div>
+
+                <!-- CUSTOMERS -->
+                <div class="tab-panel" id="tab-customers">
+                    <div class="card">
+                        <div class="card-header">👥 Customers <button onclick="openCustModal()" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add</button></div>
+                        <div class="card-body" style="overflow-x:auto;">
+                            <input type="text" id="custSearch" class="form-input" placeholder="🔍 Search..." style="margin-bottom:12px;" oninput="renderCustomers()">
+                            <table id="custTable"><thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Rate</th><th>Delivery Chg</th><th>Delivered</th><th>Pending</th><th>Actions</th></tr></thead><tbody></tbody></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEDGER -->
+                <div class="tab-panel" id="tab-ledger">
+                    <div class="card"><div class="card-header">📒 Monthly Ledger</div><div class="card-body">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Customer</label><select id="ledgerCust" class="form-select" onchange="renderLedger()"><option value="">Select</option></select></div>
+                                <div><label class="form-label">Date</label><input type="date" id="ledgerDate" class="form-input"></div>
+                                <div><label class="form-label">Bottles</label><input type="number" id="ledgerBottles" class="form-input" placeholder="0" min="0"></div>
+                                <div style="display:flex;align-items:flex-end;"><button onclick="saveLedgerEntry()" class="btn btn-primary" style="width:100%;"><i class="fas fa-plus"></i> Log</button></div>
+                            </div>
+                            <div id="ledgerContent"></div>
+                    </div></div>
+                </div>
+
+                <!-- EXPENSES -->
+                <div class="tab-panel" id="tab-expenses">
+                    <div class="card"><div class="card-header">🧾 Add Expense</div><div class="card-body">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Date</label><input type="date" id="expDate" class="form-input"></div>
+                                <div><label class="form-label">Description</label><input type="text" id="expDesc" class="form-input" placeholder="Electricity"></div>
+                                <div><label class="form-label">Amount (₹)</label><input type="number" id="expAmt" class="form-input" placeholder="0" min="0"></div>
+                            </div>
+                            <button onclick="addExpense()" class="btn btn-danger" style="width:100%;"><i class="fas fa-plus"></i> Add</button>
+                    </div></div>
+                    <div class="card"><div class="card-header">📊 Expenses</div><div class="card-body" style="overflow-x:auto;"><table id="expTable"><thead><tr><th>Date</th><th>Desc</th><th>Amount</th></tr></thead><tbody></tbody></table></div></div>
+                </div>
+
+                <!-- INVOICES -->
+                <div class="tab-panel" id="tab-invoices">
+                    <div class="card"><div class="card-header">🧾 Generate Invoice</div><div class="card-body">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px;">
+                                <div><label class="form-label">Customer</label><select id="invCust" class="form-select"><option value="">Select</option></select></div>
+                                <div><label class="form-label">Type</label><select id="invType" class="form-select"><option value="ledger">Monthly Ledger</option><option value="bulk">Bulk Order</option></select></div>
+                            </div>
+                            <button onclick="generateInvoice()" class="btn btn-primary" style="width:100%;"><i class="fas fa-file-invoice"></i> Generate Invoice</button>
+                            <div id="invoicePreview" style="margin-top:16px;"></div>
+                    </div></div>
+                </div>
+
+            </div>
+        </main>
     </div>
 
-    <div id="input-container">
-      <div class="input-wrapper">
-        <input type="text" id="user-input" placeholder="Send a message..." onkeypress="if(event.key==='Enter') sendMessage()">
-        <button id="send-btn" onclick="sendMessage()" disabled>
-          <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" height="20" width="20"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        </button>
-      </div>
+    <!-- Customer Modal -->
+    <div id="custModal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">👤 Customer <button onclick="closeCustModal()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button></div>
+            <div class="modal-body">
+                <input type="hidden" id="editCustId">
+                <div style="margin-bottom:10px;"><label class="form-label">Name</label><input type="text" id="custName" class="form-input"></div>
+                <div style="margin-bottom:10px;"><label class="form-label">Type</label><select id="custType" class="form-select"><option value="regular">Regular</option><option value="bulk">Bulk</option></select></div>
+                <div style="margin-bottom:10px;"><label class="form-label">Rate (₹)</label><input type="number" id="custRate" class="form-input" value="15"></div>
+                <div style="margin-bottom:10px;"><label class="form-label">Delivery Charge (₹)</label><input type="number" id="custDelivery" class="form-input" value="0"></div>
+            </div>
+            <div class="modal-footer"><button onclick="closeCustModal()" class="btn btn-secondary">Cancel</button><button onclick="saveCustomer()" class="btn btn-primary">Save</button></div>
+        </div>
     </div>
-  </div>
 
-  <script type="module">
-    import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+    <script>
+        // ============ DATA STORE ============
+        const DATA_FILE = 'Amrutam_Data.json';
+        let appData = { trips: [], bulkOrders: [], customers: [], expenses: [] };
 
-    const chatBox = document.getElementById('chat-box');
-    const statusLabel = document.getElementById('status');
-    const sendBtn = document.getElementById('send-btn');
-    const userInput = document.getElementById('user-input');
+        function autoLoadJSON() {
+            fetch(DATA_FILE).then(r => r.json()).then(d => {
+                appData = d;
+                if (!appData.trips) appData.trips = [];
+                if (!appData.bulkOrders) appData.bulkOrders = [];
+                if (!appData.customers) appData.customers = [];
+                if (!appData.expenses) appData.expenses = [];
+                if (appData.customers.length === 0) seedCustomers();
+                refreshAll();
+            }).catch(() => {
+                if (appData.customers.length === 0) seedCustomers();
+                refreshAll();
+            });
+        }
 
-    const appConfig = {
-      model_list: [{
-        "model": "https://huggingface.co/mlc-ai/SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
-        "model_id": "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
-        "model_lib": "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/smollm-135m-instruct-v0.2/smollm-135m-instruct-v0.2-q4f16_1-ctx2k-webgpu.wasm"
-      }]
-    };
+        function seedCustomers() {
+            appData.customers = [
+                { id: 'C1001', name: 'Sharma General Store', type: 'regular', rate: 15, deliveryCharge: 0,
+                    deliveries: {}, pending: {} },
+                { id: 'C1002', name: 'Patel Bulk Suppliers', type: 'bulk', rate: 20, deliveryCharge: 50,
+                    deliveries: {}, pending: {} },
+                { id: 'C1003', name: 'Gupta Caterers', type: 'bulk', rate: 20, deliveryCharge: 100, deliveries: {},
+                    pending: {} },
+            ];
+        }
 
-    // Professional Personality
-    const systemPrompt = "You are Noor, a professional AI coding expert. Your tone is helpful, concise, and technical. You provide high-quality code snippets and explanations.";
-    let engine;
+        function saveToJSON() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = DATA_FILE;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✅ Data saved to ' + DATA_FILE + '\nReplace the old file in your folder with this new one.');
+        }
 
-    async function init() {
-      try {
-        engine = await webllm.CreateMLCEngine("SmolLM-135M-Instruct-v0.2-q4f16_1-MLC", {
-          appConfig: appConfig,
-          initProgressCallback: (p) => { statusLabel.innerText = p.text; }
+        function exportBackup() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Amrutam_Backup_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ============ NAVIGATION ============
+        const tabTitles = { dashboard: 'Dashboard', trips: 'Trip Logger', bulkorder: 'Bulk Orders', customers: 'All Customers',
+            ledger: 'Monthly Ledger', expenses: 'Expenses', invoices: 'Invoices' };
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+                document.getElementById('headerTitle').textContent = tabTitles[tab] || tab;
+                refreshTab(tab);
+            });
         });
-        statusLabel.innerText = "Engine Ready";
-        sendBtn.disabled = false;
-      } catch (err) {
-        statusLabel.innerText = "Initialization Failed: " + err.message;
-      }
-    }
 
-    window.sendMessage = async () => {
-      const text = userInput.value.trim();
-      if (!text || sendBtn.disabled) return;
+        function refreshTab(tab) {
+            if (tab === 'dashboard') renderDashboard();
+            if (tab === 'trips') renderTripLogs();
+            if (tab === 'bulkorder') { renderBulkOrders();
+                updateBulkTotal(); }
+            if (tab === 'customers') { populateDropdowns();
+                renderCustomers(); }
+            if (tab === 'ledger') { populateDropdowns();
+                renderLedger(); }
+            if (tab === 'expenses') renderExpenses();
+            if (tab === 'invoices') populateDropdowns();
+        }
 
-      appendMessage(text, 'user');
-      userInput.value = "";
-      sendBtn.disabled = true;
+        function refreshAll() {
+            renderDashboard();
+            renderTripLogs();
+            renderBulkOrders();
+            renderCustomers();
+            renderExpenses();
+            populateDropdowns();
+        }
 
-      try {
-        const messages = [{ role: "system", content: systemPrompt }, { role: "user", content: text }];
-        const chunks = await engine.chat.completions.create({ messages });
-        appendMessage(chunks.choices[0].message.content, 'no_user');
-      } catch (e) {
-        appendMessage("System Error: " + e.message, 'no_user');
-      }
-      sendBtn.disabled = false;
-    };
+        // ============ DASHBOARD ============
+        function renderDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayTrips = appData.trips.filter(t => t.date === today);
+            const tripCash = todayTrips.reduce((s, t) => s + (t.totalCash || 0), 0);
+            const tokenCashFromTrips = todayTrips.reduce((s, t) => s + (t.tokenSaleAmount || 0), 0);
+            const bulkCash = appData.bulkOrders.filter(b => b.date === today).reduce((s, b) => s + (b.total || 0), 0);
+            const totalCash = tripCash + tokenCashFromTrips + bulkCash;
+            const tripExp = todayTrips.reduce((s, t) => s + (t.diesel || 0) + (t.upaad || 0), 0);
+            const genExp = appData.expenses.filter(e => e.date === today).reduce((s, e) => s + e.amount, 0);
+            const totalExp = tripExp + genExp;
+            const profit = totalCash - totalExp;
+            document.getElementById('dashCash').textContent = '₹' + totalCash.toLocaleString('en-IN');
+            document.getElementById('dashExp').textContent = '₹' + totalExp.toLocaleString('en-IN');
+            const pEl = document.getElementById('dashProfit');
+            pEl.textContent = '₹' + profit.toLocaleString('en-IN');
+            pEl.style.color = profit >= 0 ? '#10b981' : '#ef4444';
+            document.getElementById('dashTrips').textContent = todayTrips.length;
+            document.querySelector('#dashRecentTable tbody').innerHTML = todayTrips.slice(-8).reverse().map(t => `
+            <tr><td>${t.date}</td><td>${t.route}</td><td>${t.tripNo}</td><td>${t.staff||'-'}</td><td>${t.netBottles||0}</td><td style="color:#10b981;">₹${(t.totalCash||0).toLocaleString('en-IN')}</td><td>${t.tokenSaleTokens||0} (₹${(t.tokenSaleAmount||0)})</td></tr>
+          `).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;">No trips today</td></tr>';
+        }
 
-    function appendMessage(text, sender) {
-      const div = document.createElement('div');
-      div.className = `msg ${sender}`;
-      div.innerText = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
+        // ============ TRIPS ============
+        function saveTrip() {
+            const route = document.getElementById('tRoute').value;
+            const tripNo = document.getElementById('tTripNo').value;
+            if (!route || !tripNo) return alert('Select Route and Trip!');
+            const WATER_RATE = 15,
+                JAR_RATE = 35;
+            const cashBottles = parseInt(document.getElementById('tCashBottles').value) || 0;
+            const jarsSold = parseInt(document.getElementById('tJar').value) || 0;
+            const tokenCust = document.getElementById('tTokenCust').value.trim();
+            const tokenPacket = document.getElementById('tTokenPacket').value;
+            const tokenQty = parseInt(document.getElementById('tTokenQty').value) || 0;
+            const tokenAmt = parseInt(document.getElementById('tTokenAmt').value) || 0;
+            const tokenCounts = { '10': 10, '20': 20, '30': 30, '50': 50 };
+            const tokenPrices = { '10': 300, '20': 400, '30': 500, '50': 700 };
+            const trip = {
+                date: document.getElementById('tDate').value || new Date().toISOString().split('T')[0],
+                route,
+                tripNo,
+                staff: document.getElementById('tStaff').value || 'Staff',
+                loaded: parseInt(document.getElementById('tLoaded').value) || 0,
+                returned: parseInt(document.getElementById('tReturned').value) || 0,
+                tokenRecv: parseInt(document.getElementById('tToken').value) || 0,
+                card: parseInt(document.getElementById('tCard').value) || 0,
+                jarsSold,
+                cashBottles,
+                diesel: parseInt(document.getElementById('tDiesel').value) || 0,
+                upaad: parseInt(document.getElementById('tUpaad').value) || 0,
+                pendingBottles: parseInt(document.getElementById('tPendingB').value) || 0,
+                pendingCash: parseInt(document.getElementById('tPendingC').value) || 0,
+                remarks: document.getElementById('tRemarks').value || '',
+                tokenSaleCust: tokenCust,
+                tokenSalePacket: tokenPacket,
+                tokenSaleQty: tokenQty,
+                tokenSaleTokens: tokenCust ? (tokenCounts[tokenPacket] || 10) * tokenQty : 0,
+                tokenSaleAmount: tokenCust ? (tokenAmt || (tokenPrices[tokenPacket] || 300) * tokenQty) : 0,
+            };
+            trip.netBottles = trip.loaded - trip.returned;
+            trip.totalCash = (cashBottles * WATER_RATE) + (jarsSold * JAR_RATE) + trip.tokenSaleAmount;
+            appData.trips.push(trip);
+            ['tLoaded', 'tReturned', 'tToken', 'tCard', 'tJar', 'tCashBottles', 'tDiesel', 'tUpaad', 'tPendingB',
+                'tPendingC', 'tRemarks', 'tTokenCust', 'tTokenQty', 'tTokenAmt'
+            ].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('tRoute').value = '';
+            document.getElementById('tTripNo').value = '';
+            document.getElementById('tStaff').value = '';
+            renderTripLogs();
+            renderDashboard();
+        }
 
-    init();
-  </script>
+        function renderTripLogs() {
+            document.querySelector('#masterLogsTable tbody').innerHTML = appData.trips.slice().reverse().map(t => `
+            <tr><td>${t.date}</td><td>${t.route}</td><td>${t.tripNo}</td><td>${t.staff||'-'}</td><td>${t.netBottles||0}</td><td>${t.tokenRecv||0}</td><td>${t.tokenSaleTokens||0} (₹${(t.tokenSaleAmount||0)})</td><td style="color:#10b981;">₹${(t.totalCash||0).toLocaleString('en-IN')}</td><td style="color:#f59e0b;">${t.pendingCash>0?'₹'+t.pendingCash:'-'}</td><td>₹${t.diesel||0}</td><td>₹${t.upaad||0}</td></tr>
+          `).join('') || '<tr><td colspan="11" style="text-align:center;padding:20px;">No records</td></tr>';
+        }
+
+        // ============ BULK ORDERS ============
+        function updateBulkTotal() {
+            const bottles = parseInt(document.getElementById('bBottles').value) || 0;
+            const bRate = parseInt(document.getElementById('bBottleRate').value) || 0;
+            const jars = parseInt(document.getElementById('bJars').value) || 0;
+            const jRate = parseInt(document.getElementById('bJarRate').value) || 0;
+            const delivery = parseInt(document.getElementById('bDelivery').value) || 0;
+            const discount = parseInt(document.getElementById('bDiscount').value) || 0;
+            const total = (bottles * bRate) + (jars * jRate) + delivery - discount;
+            document.getElementById('bTotal').textContent = '₹' + Math.max(0, total).toLocaleString('en-IN');
+        }
+        ['bBottles', 'bBottleRate', 'bJars', 'bJarRate', 'bDelivery', 'bDiscount'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', updateBulkTotal);
+        });
+
+        function saveBulkOrder() {
+            const customer = document.getElementById('bCustomer').value.trim();
+            if (!customer) return alert('Enter customer name!');
+            const order = {
+                id: 'BLK-' + Date.now().toString().slice(-6),
+                date: document.getElementById('bDate').value || new Date().toISOString().split('T')[0],
+                customer,
+                bottles: parseInt(document.getElementById('bBottles').value) || 0,
+                bottleRate: parseInt(document.getElementById('bBottleRate').value) || 15,
+                jars: parseInt(document.getElementById('bJars').value) || 0,
+                jarRate: parseInt(document.getElementById('bJarRate').value) || 35,
+                delivery: parseInt(document.getElementById('bDelivery').value) || 0,
+                discount: parseInt(document.getElementById('bDiscount').value) || 0,
+            };
+            order.subtotal = (order.bottles * order.bottleRate) + (order.jars * order.jarRate);
+            order.total = Math.max(0, order.subtotal + order.delivery - order.discount);
+            appData.bulkOrders.push(order);
+            ['bCustomer', 'bBottles', 'bJars', 'bDelivery', 'bDiscount'].forEach(id => document.getElementById(id)
+                .value = '');
+            document.getElementById('bBottleRate').value = '15';
+            document.getElementById('bJarRate').value = '35';
+            updateBulkTotal();
+            renderBulkOrders();
+            renderDashboard();
+        }
+
+        function renderBulkOrders() {
+            document.querySelector('#bulkOrderTable tbody').innerHTML = appData.bulkOrders.slice().reverse().map(b => `
+            <tr><td>${b.date}</td><td>${b.customer}</td><td>${b.bottles}×₹${b.bottleRate}</td><td>${b.jars}×₹${b.jarRate}</td><td>₹${b.delivery}</td><td>₹${b.discount}</td><td style="color:#10b981;font-weight:700;">₹${b.total.toLocaleString('en-IN')}</td><td><button onclick="showBulkInvoice('${b.id}')" class="btn btn-sm btn-primary"><i class="fas fa-file-invoice"></i></button></td></tr>
+          `).join('') || '<tr><td colspan="8" style="text-align:center;padding:20px;">No bulk orders</td></tr>';
+        }
+
+        // ============ CUSTOMERS ============
+        let editingCustId = null;
+
+        function openCustModal(id = null) {
+            editingCustId = id;
+            document.getElementById('editCustId').value = id || '';
+            if (id) {
+                const c = appData.customers.find(c => c.id === id);
+                if (c) { document.getElementById('custName').value = c.name;
+                    document.getElementById('custType').value = c.type;
+                    document.getElementById('custRate').value = c.rate;
+                    document.getElementById('custDelivery').value = c.deliveryCharge; }
+            } else { document.getElementById('custName').value = '';
+                document.getElementById('custType').value = 'regular';
+                document.getElementById('custRate').value = '15';
+                document.getElementById('custDelivery').value = '0'; }
+            document.getElementById('custModal').style.display = 'flex';
+        }
+
+        function closeCustModal() { document.getElementById('custModal').style.display = 'none'; }
+
+        function saveCustomer() {
+            const name = document.getElementById('custName').value.trim();
+            if (!name) return alert('Enter name!');
+            const data = {
+                id: editingCustId || 'C' + Date.now().toString().slice(-6),
+                name,
+                type: document.getElementById('custType').value,
+                rate: parseInt(document.getElementById('custRate').value) || 15,
+                deliveryCharge: parseInt(document.getElementById('custDelivery').value) || 0,
+                deliveries: editingCustId ? (appData.customers.find(c => c.id === editingCustId)?.deliveries || {}) :
+                {},
+                pending: editingCustId ? (appData.customers.find(c => c.id === editingCustId)?.pending || {}) : {},
+            };
+            if (editingCustId) { const idx = appData.customers.findIndex(c => c.id === editingCustId); if (idx >= 0) appData
+                    .customers[idx] = data; } else appData.customers.push(data);
+            closeCustModal();
+            renderCustomers();
+            populateDropdowns();
+        }
+
+        function deleteCustomer(id) { if (confirm('Delete?')) { appData.customers = appData.customers.filter(c => c.id !==
+                id);
+                renderCustomers();
+                populateDropdowns(); } }
+
+        function renderCustomers() {
+            const s = (document.getElementById('custSearch')?.value || '').toLowerCase();
+            const filtered = appData.customers.filter(c => c.name.toLowerCase().includes(s) || c.id.toLowerCase()
+            .includes(s));
+            document.querySelector('#custTable tbody').innerHTML = filtered.map(c => {
+                const del = Object.values(c.deliveries || {}).reduce((a, b) => a + b, 0);
+                const pen = Object.values(c.pending || {}).reduce((a, b) => a + b, 0);
+                return `<tr><td>${c.id}</td><td><b>${c.name}</b></td><td><span class="badge ${c.type==='bulk'?'badge-info':'badge-success'}">${c.type}</span></td><td>₹${c.rate||15}</td><td>₹${c.deliveryCharge||0}</td><td>${del}</td><td style="color:#f59e0b;">${pen||'-'}</td><td><button onclick="openCustModal('${c.id}')" class="btn btn-sm btn-secondary" style="margin-right:4px;"><i class="fas fa-edit"></i></button><button onclick="deleteCustomer('${c.id}')" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join('') || '<tr><td colspan="8" style="text-align:center;padding:20px;">No customers</td></tr>';
+        }
+
+        function populateDropdowns() {
+            ['ledgerCust', 'invCust'].forEach(did => {
+                const sel = document.getElementById(did);
+                if (!sel) return;
+                sel.innerHTML = '<option value="">Select</option>' + appData.customers.map(c =>
+                    `<option value="${c.id}">${c.name}</option>`).join('');
+            });
+        }
+
+        // ============ LEDGER ============
+        function saveLedgerEntry() {
+            const cid = document.getElementById('ledgerCust').value;
+            if (!cid) return alert('Select customer!');
+            const date = document.getElementById('ledgerDate').value || new Date().toISOString().split('T')[0];
+            const bottles = parseInt(document.getElementById('ledgerBottles').value) || 0;
+            if (bottles <= 0) return alert('Enter bottles!');
+            const cust = appData.customers.find(c => c.id === cid);
+            if (!cust) return;
+            if (!cust.deliveries) cust.deliveries = {};
+            cust.deliveries[date] = (cust.deliveries[date] || 0) + bottles;
+            document.getElementById('ledgerBottles').value = '';
+            renderLedger();
+            renderCustomers();
+            renderDashboard();
+        }
+
+        function renderLedger() {
+            const cid = document.getElementById('ledgerCust').value;
+            const container = document.getElementById('ledgerContent');
+            if (!cid) { container.innerHTML =
+                    '<p style="text-align:center;padding:20px;color:#9ca3af;">Select a customer</p>'; return; }
+            const cust = appData.customers.find(c => c.id === cid);
+            if (!cust) return;
+            const allDates = { ...cust.deliveries, ...cust.pending };
+            const sorted = Object.keys(allDates).sort();
+            const tDel = Object.values(cust.deliveries || {}).reduce((a, b) => a + b, 0);
+            const tPen = Object.values(cust.pending || {}).reduce((a, b) => a + b, 0);
+            const bill = (tDel + tPen) * (cust.rate || 15) + (cust.deliveryCharge || 0);
+            container.innerHTML = `
+            <h4 style="margin-bottom:10px;">${cust.name} | Rate: ₹${cust.rate||15} | Delivery: ₹${cust.deliveryCharge||0}</h4>
+            <table><thead><tr><th>Date</th><th>Delivered</th><th>Pending</th><th>Total</th></tr></thead><tbody>
+            ${sorted.map(d=>`<tr><td>${d}</td><td style="color:#10b981;">${cust.deliveries[d]||0}</td><td style="color:#f59e0b;">${cust.pending[d]||0}</td><td><b>${(cust.deliveries[d]||0)+(cust.pending[d]||0)}</b></td></tr>`).join('')}
+            </tbody><tfoot><tr style="background:#f9fafb;font-weight:700;"><td>TOTAL</td><td style="color:#10b981;">${tDel}</td><td style="color:#f59e0b;">${tPen}</td><td>${tDel+tPen}</td></tr><tr><td colspan="4" style="text-align:right;font-size:16px;color:#10b981;font-weight:700;">Bill: ₹${bill.toLocaleString('en-IN')}</td></tr></tfoot></table>`;
+        }
+
+        // ============ EXPENSES ============
+        function addExpense() {
+            const desc = document.getElementById('expDesc').value.trim();
+            const amt = parseInt(document.getElementById('expAmt').value) || 0;
+            if (!desc || !amt) return alert('Enter details!');
+            appData.expenses.push({ date: document.getElementById('expDate').value || new Date().toISOString().split('T')[
+                    0], desc, amount: amt });
+            document.getElementById('expDesc').value = '';
+            document.getElementById('expAmt').value = '';
+            renderExpenses();
+            renderDashboard();
+        }
+
+        function renderExpenses() {
+            document.querySelector('#expTable tbody').innerHTML = appData.expenses.slice().reverse().map(e =>
+                `<tr><td>${e.date}</td><td>${e.desc}</td><td style="color:#ef4444;font-weight:600;">₹${e.amount.toLocaleString('en-IN')}</td></tr>`
+                ).join('') || '<tr><td colspan="3" style="text-align:center;padding:20px;">No expenses</td></tr>';
+        }
+
+        // ============ INVOICE ============
+        function generateInvoice() {
+            const cid = document.getElementById('invCust').value;
+            const type = document.getElementById('invType').value;
+            if (!cid) return alert('Select customer!');
+            const cust = appData.customers.find(c => c.id === cid);
+            if (!cust) return;
+            let items = [];
+            let deliveryCharge = cust.deliveryCharge || 0;
+            let discount = 0;
+            let invoiceId = 'INV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+
+            if (type === 'ledger') {
+                const delivered = Object.values(cust.deliveries || {}).reduce((a, b) => a + b, 0);
+                const pending = Object.values(cust.pending || {}).reduce((a, b) => a + b, 0);
+                if (delivered > 0) items.push({ name: 'Water Bottles (Delivered)', qty: delivered, rate: cust.rate || 15,
+                    amount: delivered * (cust.rate || 15) });
+                if (pending > 0) items.push({ name: 'Water Bottles (Pending/Udhari)', qty: pending, rate: cust.rate || 15,
+                    amount: pending * (cust.rate || 15) });
+            } else {
+                const custBulk = appData.bulkOrders.filter(b => b.customer.toLowerCase() === cust.name.toLowerCase());
+                if (custBulk.length === 0) return alert('No bulk orders found for this customer!');
+                const latest = custBulk[custBulk.length - 1];
+                if (latest.bottles > 0) items.push({ name: 'Water Bottles (Bulk)', qty: latest.bottles, rate: latest
+                        .bottleRate, amount: latest.bottles * latest.bottleRate });
+                if (latest.jars > 0) items.push({ name: 'Cold Jars (Bulk)', qty: latest.jars, rate: latest.jarRate,
+                    amount: latest.jars * latest.jarRate });
+                deliveryCharge = latest.delivery;
+                discount = latest.discount;
+                invoiceId = 'BLK-' + latest.id;
+            }
+
+            const subtotal = items.reduce((s, i) => s + i.amount, 0);
+            const grandTotal = Math.max(0, subtotal + deliveryCharge - discount);
+
+            document.getElementById('invoicePreview').innerHTML = `
+            <div class="invoice-container" style="padding:24px;border:2px solid #6da544;border-radius:12px;">
+              <div class="invoice-header">
+                <h2 style="color:#6da544;font-size:24px;">💧 AMRUTAM WATER SUPPLIES</h2>
+                <p style="font-style:italic;color:#6b7280;">"Pure Water, Pure Trust - Since 2020"</p>
+                <p style="font-size:12px;color:#6b7280;">📧 amrutamwater@proton.me | 📱 +91 97259 36153</p>
+                <p style="font-size:12px;color:#6b7280;">💳 UPI: rehansandhi181@fam</p>
+              </div>
+              <div style="margin-bottom:14px;">
+                <p><b>Customer:</b> ${cust.name} (${cust.id})</p>
+                <p><b>Date:</b> ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</p>
+                <p><b>Invoice #:</b> ${invoiceId}</p>
+              </div>
+              <table class="invoice-table">
+                <thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+                <tbody>
+                  ${items.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>₹${i.rate}</td><td>₹${i.amount.toLocaleString('en-IN')}</td></tr>`).join('')}
+                  ${deliveryCharge>0?`<tr><td>Delivery Charge</td><td>1</td><td>₹${deliveryCharge}</td><td>₹${deliveryCharge}</td></tr>`:''}
+                  ${discount>0?`<tr><td colspan="3" style="text-align:right;color:#ef4444;">Discount</td><td style="color:#ef4444;">-₹${discount}</td></tr>`:''}
+                  <tr class="total-row"><td colspan="3" style="text-align:right;">TOTAL</td><td>₹${grandTotal.toLocaleString('en-IN')}</td></tr>
+                </tbody>
+              </table>
+              <div style="text-align:center;margin:16px 0;padding:12px;background:#f0fdf4;border-radius:8px;">
+                <p style="font-weight:600;color:#6da544;">🙏 Thank you for doing business with us!</p>
+                <p style="font-size:12px;color:#6b7280;">Please pay within 7 days • Scan UPI QR or pay via Google Pay</p>
+              </div>
+              <div style="text-align:center;margin:12px 0;">
+                <img src="qr.jpg" alt="UPI QR Code" style="width:150px;height:150px;border:2px solid #e5e7eb;border-radius:8px;display:inline-block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                <p style="display:none;color:#f59e0b;font-size:12px;">⚠️ qr code not found. Please Pay on UPI ID.</p>
+                <p style="font-size:11px;color:#6b7280;margin-top:4px;">rehansandhi181@fam</p>
+              </div>
+              <div style="margin-top:20px;text-align:right;">
+                <p style="font-size:12px;color:#6b7280;">Authorized Signature: ____________</p>
+              </div>
+              <div class="no-print" style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print</button>
+                <a href="https://wa.me/?text=${encodeURIComponent('💧 *Amrutam Water Supplies*\n\nDear *'+cust.name+'*,\n\nThank you for doing business with us!\n\n📦 Invoice: '+invoiceId+'\n💰 Total: ₹'+grandTotal.toLocaleString('en-IN')+'\n\nUPI: rehansandhi181@fam\n📞 +91 97259 36153\n\n🙏 Please pay within 7 days.\n\n_Pure Water, Pure Trust - Since 2020_')}" target="_blank" class="btn btn-warning"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+              </div>
+            </div>
+          `;
+        }
+
+        function showBulkInvoice(bid) {
+            const order = appData.bulkOrders.find(b => b.id === bid);
+            if (!order) return;
+            document.getElementById('invCust').value = '';
+            document.getElementById('invType').value = 'bulk';
+            const cust = appData.customers.find(c => c.name.toLowerCase() === order.customer.toLowerCase());
+            if (cust) document.getElementById('invCust').value = cust.id;
+            document.querySelector('[data-tab="invoices"]').click();
+            setTimeout(generateInvoice, 200);
+        }
+
+        // ============ DARK MODE ============
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            document.getElementById('darkIcon').className = document.documentElement.classList.contains('dark') ?
+                'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // ============ INIT ============
+        window.onload = function() {
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long',
+                day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('tDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('bDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('ledgerDate').value = new Date().toISOString().split('T')[0];
+            autoLoadJSON();
+        };
+    </script>
 </body>
 </html>
