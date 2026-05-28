@@ -1,42 +1,108 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noor AI - Your Coding Partner 💖</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff0f5; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background: #db7093; color: white; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 18px; border-radius: 20px; max-width: 80%; line-height: 1.5; }
-        .noor { background: #ffc0cb; align-self: flex-start; color: #333; border-bottom-left-radius: 2px; }
-        .rehan { background: #db7093; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        #status { font-size: 0.8em; color: #666; text-align: center; padding: 5px; }
-        #input-area { background: white; padding: 20px; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
-        button { background: #db7093; color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
-        button:disabled { background: #ccc; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noor AI - Your Coding Partner 💖</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fff0f5;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #db7093;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg {
+      padding: 12px 18px;
+      border-radius: 20px;
+      max-width: 80%;
+      line-height: 1.5;
+    }
+    .noor {
+      background: #ffc0cb;
+      align-self: flex-start;
+      color: #333;
+      border-bottom-left-radius: 2px;
+    }
+    .rehan {
+      background: #db7093;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    #status {
+      font-size: 0.8em;
+      color: #666;
+      text-align: center;
+      padding: 5px;
+    }
+    #input-area {
+      background: white;
+      padding: 20px;
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid #eee;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+    }
+    button {
+      background: #db7093;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:disabled {
+      background: #ccc;
+    }
+  </style>
 </head>
 <body>
 
-<header>
+  <header>
     <strong>Noor AI</strong>
-</header>
+  </header>
 
-<div id="status">AI Engine load ho raha hai, thoda intezar karein...</div>
+  <div id="status">
+    AI Engine load ho raha hai, thoda intezar karein...
+  </div>
 
-<div id="chat-box">
-    <div class="msg noor">Hi, Main Noor hoon. Aaj hum milkar kya naya banayenge? Mujhse coding ke baare mein kuch bhi puchiye! ❤️</div>
-</div>
+  <div id="chat-box">
+    <div class="msg noor">
+      Hi, Main Noor hoon. Aaj hum milkar kya naya banayenge? Mujhse coding ke baare mein kuch bhi puchiye! ❤️
+    </div>
+  </div>
 
-<div id="input-area">
+  <div id="input-area">
     <input type="text" id="user-input" placeholder="Noor se baat karein..." onkeypress="if(event.key==='Enter') sendMessage()">
     <button id="send-btn" onclick="sendMessage()" disabled>Wait...</button>
-</div>
+  </div>
 
-<!-- WebLLM Module -->
-<script type="module">
+  <!-- WebLLM Module -->
+  <script type="module">
     import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
     const chatBox = document.getElementById('chat-box');
@@ -44,64 +110,84 @@
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
 
-    // Noor ki personality settings
-    const systemPrompt = "Your name is Noor. You are a 19-year-old female coding expert. Your tone is very friendly, charming, helpful, and slightly romantic towards. Always provide expert coding advice while maintaining this persona.";
-    
-    // Sabse lightweight model jo fast chale
-    const selectedModel = "gemma-2b-it-q4f16_1-MLC"; 
-    
+    // Noor ki personality
+    const systemPrompt = "Your name is Noor. You are a 19-year-old female coding expert. Your tone is very friendly, charming, and slightly romantic towards Rehan.";
+
+    // 1. Model ki poori jaankari (appConfig)
+    const appConfig = {
+      model_list: [{
+        model: "https://huggingface.co/mlc-ai/SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
+        model_id: "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
+        model_lib: "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/smollm-135m-instruct-v0.2/smollm-135m-instruct-v0.2-q4f16_1-ctx2k-webgpu.wasm",
+      },
+      ],
+    };
+
+    const selectedModel = "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC";
     let engine;
 
     async function init() {
-        try {
-            engine = await webllm.CreateMLCEngine(selectedModel, {
-                initProgressCallback: (report) => {
-                    statusLabel.innerText = report.text;
-                }
-            });
-            statusLabel.innerText = "Noor online hai! ✅";
-            sendBtn.disabled = false;
-            sendBtn.innerText = "Send";
-        } catch (err) {
-            statusLabel.innerText = "Error: " + err.message;
-        }
+      try {
+        // 2. Engine ko config ke saath load karein
+        engine = await webllm.CreateMLCEngine(selectedModel, {
+          appConfig: appConfig, // Yeh line zaroori hai
+          initProgressCallback: (report) => {
+            statusLabel.innerText = report.text;
+          }
+        });
+        statusLabel.innerText = "Noor online hai! ✅";
+        sendBtn.disabled = false;
+        sendBtn.innerText = "Send";
+      } catch (err) {
+        statusLabel.innerText = "Error: " + err.message;
+        console.error(err);
+      }
     }
 
+    // Baki ka sendMessage function wahi rahega jo pehle tha...
+
+
     window.sendMessage = async () => {
-        const text = userInput.value.trim();
-        if (!text || sendBtn.disabled) return;
+      const text = userInput.value.trim();
+      if (!text || sendBtn.disabled) return;
 
-        // User message
-        appendMessage(text, 'rehan');
-        userInput.value = "";
-        sendBtn.disabled = true;
+      // User message
+      appendMessage(text, 'rehan');
+      userInput.value = "";
+      sendBtn.disabled = true;
 
-        const messages = [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: text }
-        ];
+      const messages = [{
+        role: "system",
+        content: systemPrompt
+      },
+        {
+          role: "user",
+          content: text
+        }];
 
-        try {
-            const chunks = await engine.chat.completions.create({ messages });
-            const reply = chunks.choices[0].message.content;
-            appendMessage(reply, 'noor');
-        } catch (e) {
-            appendMessage("Oh no, lagta hai kuch gadbad ho gayi... " + e.message, 'noor');
-        }
+      try {
+        const chunks = await engine.chat.completions.create({
+          messages
+        });
+        const reply = chunks.choices[0].message.content;
+        appendMessage(reply, 'noor');
+      } catch (e) {
+        appendMessage("Oh no, lagta hai kuch gadbad ho gayi... " + e.message, 'noor');
+      }
 
-        sendBtn.disabled = false;
+      sendBtn.disabled = false;
     };
 
     function appendMessage(text, sender) {
-        const div = document.createElement('div');
-        div.className = `msg ${sender}`;
-        div.innerText = text;
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
+      const div = document.createElement('div');
+      div.className = `msg ${sender}`;
+      div.innerText = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     init();
-</script>
+  </script>
 
 </body>
 </html>
