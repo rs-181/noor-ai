@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noor AI - Coding Expert</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fff0f5; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; }
+        .noor-msg { background: #ffc0cb; padding: 10px; border-radius: 15px; margin-bottom: 10px; align-self: flex-start; max-width: 80%; }
+        .user-msg { background: #e0e0e0; padding: 10px; border-radius: 15px; margin-bottom: 10px; align-self: flex-end; text-align: right; }
+        #input-area { padding: 20px; background: white; display: flex; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #db7093; color: white; border: none; padding: 10px 20px; margin-left: 10px; cursor: pointer; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center; color: #db7093;">Noor AI (19, Coding Expert) 💖</h2>
+    <div id="chat-container">
+        <div class="noor-msg">Hi Rehan! Main Noor hoon. Aaj kya code karein?</div>
+    </div>
+    <div id="input-area">
+        <input type="text" id="user-input" placeholder="Noor se kuch puchiye...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <!-- WebLLM Script -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
