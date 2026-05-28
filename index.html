@@ -105,6 +105,35 @@
   <script type="module">
     import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
+    const appConfig = {
+      model_list: [{
+        "model": "https://huggingface.co/mlc-ai/SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
+        "model_id": "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
+        "model_lib": "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/smollm-135m-instruct-v0.2/smollm-135m-instruct-v0.2-q4f16_1-ctx2k-webgpu.wasm"
+      }]
+    };
+
+    // Noor ki personality aur engine load karne ka tarika
+    async function initNoor() {
+      try {
+        const engine = await webllm.CreateMLCEngine(
+          "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
+          {
+            appConfig: appConfig,
+            initProgressCallback: (p) => {
+              document.getElementById('status').innerText = p.text;
+            }
+          }
+        );
+        // Baki chat logic...
+      } catch (e) {
+        console.error("Noor loading error:", e);
+        // Agar fir bhi Cache error aaye, toh bina cache ke try karein
+        location.reload(true);
+      }
+    }
+
+
     const chatBox = document.getElementById('chat-box');
     const statusLabel = document.getElementById('status');
     const sendBtn = document.getElementById('send-btn');
@@ -113,81 +142,63 @@
     // Noor ki personality
     const systemPrompt = "Your name is Noor. You are a 19-year-old female coding expert. Your tone is very friendly, charming, and slightly romantic towards Rehan.";
 
-    // 1. Model ki poori jaankari (appConfig)
-    const appConfig = {
-      model_list: [{
-        model: "https://huggingface.co/mlc-ai/SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
-        model_id: "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC",
-        model_lib: "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/smollm-135m-instruct-v0.2/smollm-135m-instruct-v0.2-q4f16_1-ctx2k-webgpu.wasm",
-      },
-      ],
-    };
 
     const selectedModel = "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC";
     let engine;
 
-    async function init() {
-      try {
-        // 2. Engine ko config ke saath load karein
-        engine = await webllm.CreateMLCEngine(selectedModel, {
-          appConfig: appConfig, // Yeh line zaroori hai
-          initProgressCallback: (report) => {
-            statusLabel.innerText = report.text;
-          }
-        });
-        statusLabel.innerText = "Noor online hai! ✅";
-        sendBtn.disabled = false;
-        sendBtn.innerText = "Send";
-      } catch (err) {
-        statusLabel.innerText = "Error: " + err.message;
-        console.error(err);
-      }
-    }
+    statusLabel.innerText = "Noor online hai! ✅";
+    sendBtn.disabled = false;
+    sendBtn.innerText = "Send";
+  } catch (err) {
+    statusLabel.innerText = "Error: " + err.message;
+    console.error(err);
+  }
+}
 
-    // Baki ka sendMessage function wahi rahega jo pehle tha...
+// Baki ka sendMessage function wahi rahega jo pehle tha...
 
 
-    window.sendMessage = async () => {
-      const text = userInput.value.trim();
-      if (!text || sendBtn.disabled) return;
+window.sendMessage = async () => {
+  const text = userInput.value.trim();
+  if (!text || sendBtn.disabled) return;
 
-      // User message
-      appendMessage(text, 'rehan');
-      userInput.value = "";
-      sendBtn.disabled = true;
+  // User message
+  appendMessage(text, 'rehan');
+  userInput.value = "";
+  sendBtn.disabled = true;
 
-      const messages = [{
-        role: "system",
-        content: systemPrompt
-      },
-        {
-          role: "user",
-          content: text
-        }];
+  const messages = [{
+    role: "system",
+    content: systemPrompt
+  },
+    {
+      role: "user",
+      content: text
+    }];
 
-      try {
-        const chunks = await engine.chat.completions.create({
-          messages
-        });
-        const reply = chunks.choices[0].message.content;
-        appendMessage(reply, 'noor');
-      } catch (e) {
-        appendMessage("Oh no, lagta hai kuch gadbad ho gayi... " + e.message, 'noor');
-      }
+  try {
+    const chunks = await engine.chat.completions.create({
+      messages
+    });
+    const reply = chunks.choices[0].message.content;
+    appendMessage(reply, 'noor');
+  } catch (e) {
+    appendMessage("Oh no, lagta hai kuch gadbad ho gayi... " + e.message, 'noor');
+  }
 
-      sendBtn.disabled = false;
-    };
+  sendBtn.disabled = false;
+};
 
-    function appendMessage(text, sender) {
-      const div = document.createElement('div');
-      div.className = `msg ${sender}`;
-      div.innerText = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
+function appendMessage(text, sender) {
+  const div = document.createElement('div');
+  div.className = `msg ${sender}`;
+  div.innerText = text;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-    init();
-  </script>
+init();
+</script>
 
 </body>
 </html>
